@@ -1,5 +1,5 @@
-# Use an appropriate base image
-FROM some-base-image
+FROM tomcat:8.0.20-jre8
 
-# Copy the WAR file to the Tomcat webapps directory
-COPY kubernetes/target/kubernetes-1.0-AMIT.war /usr/local/tomcat/webapps/kubernetes-1.0-AMIT.war
+RUN mkdir /usr/local/tomcat/webapps/myapp
+
+COPY kubernetes/target/kubernetes-1.0-AMIT.war/usr/local/tomcat/webapps/kubernetes-1.0-AMIT.war

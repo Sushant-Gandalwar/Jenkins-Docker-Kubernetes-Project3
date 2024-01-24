@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
   - name: demo
-    image: 407204
+    image: gcr.io/jenkins-407204/demo@sha256:a7c29e6df4f6c5abc7b62a15d1bbd9cb9dbc140dbc5297f7c2fb9e0b7ae49463
     ports:
     - containerPort: 80

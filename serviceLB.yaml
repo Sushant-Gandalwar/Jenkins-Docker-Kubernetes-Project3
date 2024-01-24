@@ -17,7 +17,7 @@ spec:
   spec:
    containers:
    - name: myapp-app-loadbalancer
-     image: 407204
+     image: gcr.io/jenkins-407204/demo@sha256:15e99b44fc3991347e58029ae070397f6c9ac9ee6316484a6e4b595ace200ff5
      ports:
      - containerPort: 8080
 

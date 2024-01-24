@@ -1,59 +1,53 @@
-pipeline {
-    agent any
-	tools {
+def call(Map pipelineParams) {
+    pipeline {
+        agent any
+	    tools {
 		maven 'Maven'
 	}
-	
-	environment {
-		PROJECT_ID = 'jenkins-296812'
+
+        environment {
+            scmUrl = "${pipelineParams.scmUrl}"
+            APP_Name = "${pipelineParams.appName}"
+            DOCKERDIRECTORY = "${pipelineParams.dockerDirectory}"
+            IMAGE = "${pipelineParams.dockerImage}"
+            IMAGE_TAG = "${params.Parameter}"
+            CREDENTIALS_ID = "${pipelineParams.dockerCredentialsId}"
+            KUBERNETES_MANIFEST_FILE = '/var/lib/jenkins/workspace/react/k8s/demo.yaml'
+            PROJECT_ID = 'jenkins-407204'
                 CLUSTER_NAME = 'k8s-cluster'
                 LOCATION = 'us-central1-c'
-                CREDENTIALS_ID = 'kubernetes'		
-	}
-	
-    stages {
-	    stage('Scm Checkout') {
-		    steps {
-			    checkout scm
-		    }
-	    }
-	    
-	    stage('Build') {
-		    steps {
-			    sh 'mvn clean package'
-		    }
-	    }
-	    
-	    stage('Test') {
-		    steps {
-			    echo "Testing..."
-			    sh 'mvn test'
-		    }
-	    }
-	    
-	    stage('Build Docker Image') {
-		    steps {
-			    sh 'whoami'
-			    script {
-				    myimage = docker.build("ameintu/devops:${env.BUILD_ID}")
-			    }
-		    }
-	    }
-	    
-	    stage("Push Docker Image") {
-		    steps {
-			    script {
-				    echo "Push Docker Image"
-				    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-            				sh "docker login -u ameintu -p ${dockerhub}"
-				    }
-				        myimage.push("${env.BUILD_ID}")
-				    
-			    }
-		    }
-	    }
-	    
-	    stage('Deploy to K8s') {
+               
+        }
+
+        stages {
+            stage('INITIALIZE') {
+                steps {
+                    script {
+                        echo "Initializing environment for webstore delivery pipeline"
+                        echo "Git URL: ${env.scmUrl}"
+                    }
+                }
+                post {
+                    failure {
+                        script {
+                            error("Initialization code has an error for ${APP_Name}")
+                        }
+                    }
+                }
+            }
+
+            stage('Build and Push Docker Image') {
+                steps {
+                    script {
+                        withDockerRegistry([credentialsId: "gcr:${env.CREDENTIALS_ID}", url: "https://gcr.io"]) {
+                            sh "cd ${env.DOCKERDIRECTORY} && docker build -t '${env.IMAGE}:${env.IMAGETAG}' -f Dockerfile ."
+                            sh "docker push '${env.IMAGE}:${env.IMAGETAG}'"
+                        }
+                    }
+                }
+            }
+
+           stage('Deploy to K8s') {
 		    steps{
 			    echo "Deployment started ..."
 			    sh 'ls -ltr'
@@ -67,5 +61,6 @@ pipeline {
 			    echo "Deployment Finished ..."
 		    }
 	    }
+        }
     }
 }

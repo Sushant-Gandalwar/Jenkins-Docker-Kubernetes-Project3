@@ -1,7 +1,7 @@
 @Library('shared-utils') _
 
 index(
-    scmUrl: 'https://github.com/Sushant-Gandalwar/react-alarm-app.git',
+    scmUrl: 'https://github.com/Sushant-Gandalwar/Jenkins-Docker-Kubernetes-Project3',
     branch: env.BRANCH_NAME, 
     bitbucketCredentialsId: 'sushant-git', 
     appName: 'react-app-demo',

@@ -17,7 +17,7 @@ spec:
   spec:
    containers:
    - name: myapp
-     image: sushantgandalwar/devops:tagversion
+     image: gcr.io/jenkins-407204/demo:demo
      ports:
      - containerPort: 8080
 

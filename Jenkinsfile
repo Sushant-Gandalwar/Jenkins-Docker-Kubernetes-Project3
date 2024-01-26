@@ -1,9 +1,7 @@
 @Library('shared-utils') _
 
 index(
-    scmUrl: 'https://github.com/Sushant-Gandalwar/Jenkins-Docker-Kubernetes-Project3',
-    branch: env.BRANCH_NAME, 
-    bitbucketCredentialsId: 'sushant-git', 
+    scmUrl: 'https://github.com/Sushant-Gandalwar/Jenkins-Docker-Kubernetes-Project3'
     appName: 'react-app-demo',
     dockerDirectory: '/var/lib/jenkins/workspace/java',
     dockerImage: 'gcr.io/jenkins-407204/demo',

@@ -2,7 +2,6 @@
 
 index(
     scmUrl: 'https://github.com/Sushant-Gandalwar/Jenkins-Docker-Kubernetes-Project3',
-    git : 'sushant-git',
     appName: 'react-app-demo6',
     dockerDirectory: '/var/lib/jenkins/workspace/dem',
     dockerImage: 'gcr.io/jenkins-407204/demo',

@@ -1,36 +1,14 @@
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
- name: myapp-deployment-loadbalancer
- labels:
-  app: myapp-app-loadbalancer
-spec:
- replicas: 1
- selector:
-  matchLabels:
-   app: myapp-app-loadbalancer
- template:
-  metadata: 
-   labels:
-    app: myapp-app-loadbalancer
-  spec:
-   containers:
-   - name: myapp-app-loadbalancer
-     image: gcr.io/jenkins-407204/demo:tagversion
-     ports:
-     - containerPort: 8080
-
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapp-service-loadbalancer
+  name: flask-hello-service-nodeport # name of the service
+
 spec:
-  type: LoadBalancer
-  selector:
-    app: myapp-app-loadbalancer
+  type: NodePort # Used for accessing a port externally
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
+    - port: 5000 # Service port
+      targetPort: 5000 # Pod port, default: same as port
+      nodePort: 30008 # Node port which can be used externally, default: auto-assign any free port
+  selector: # Which pods to expose externally ?
+    app: flask-hello
+    tier: frontend

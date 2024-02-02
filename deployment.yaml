@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-hello-deployment # name of the deployment
-
+  name: nginx-deployment-loadbalancer
+  labels:
+    app: nginx-app-loadbalancer
 spec:
-  template: # pod defintion
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app-loadbalancer
+  template:
     metadata:
-      name: flask-hello # name of the pod
       labels:
-        app: flask-hello
-        tier: frontend
+        app: nginx-app-loadbalancer
     spec:
       containers:
-        - name: flask-hello
-          image: shivammitra/flask-hello-world:latest
-  replicas: 3
-  selector: # Mandatory, Select the pods which needs to be in the replicaset
-    matchLabels:
-      app: flask-hello
-      tier: frontend
+      - name: nginx-container
+        image: gcr.io/jenkins-407204/demo:tagversion
+        ports:
+        - containerPort: 80

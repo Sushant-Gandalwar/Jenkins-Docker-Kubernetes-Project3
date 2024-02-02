@@ -1,36 +1,21 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: myapp
- labels:
-  app: myapp
-spec:
- replicas: 1
- selector:
-  matchLabels:
-   app: myapp
- template:
-  metadata: 
-   labels:
-    app: myapp
-  spec:
-   containers:
-   - name: myapp
-     image: gcr.io/jenkins-407204/demo:tagversion
-     ports:
-     - containerPort: 8080
+  name: flask-hello-deployment # name of the deployment
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: myapp
 spec:
-  type: LoadBalancer
-  selector:
-    app: myapp
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
+  template: # pod defintion
+    metadata:
+      name: flask-hello # name of the pod
+      labels:
+        app: flask-hello
+        tier: frontend
+    spec:
+      containers:
+        - name: flask-hello
+          image: shivammitra/flask-hello-world:latest
+  replicas: 3
+  selector: # Mandatory, Select the pods which needs to be in the replicaset
+    matchLabels:
+      app: flask-hello
+      tier: frontend
